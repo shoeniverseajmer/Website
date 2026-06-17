@@ -1,20 +1,10 @@
-import { useForm } from 'react-hook-form';
+import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useAuthStore } from '../../store/authStore';
-
-const schema = z.object({
-  name: z.string().min(2, 'Enter your name'),
-  email: z.string().email('Enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters')
-});
-
-type Values = z.infer<typeof schema>;
 
 function GoogleIcon() {
   return (
@@ -31,17 +21,36 @@ export function SignupPage() {
   const navigate = useNavigate();
   const signup = useAuthStore((state) => state.signup);
   const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
-  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { name: '', email: '', password: '' } });
+  const [errors, setErrors] = React.useState<{ name?: string; email?: string; password?: string }>({});
+  const [submitting, setSubmitting] = React.useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
-  const submit = form.handleSubmit(async (values) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = nameRef.current?.value.trim() ?? '';
+    const email = emailRef.current?.value.trim() ?? '';
+    const password = passwordRef.current?.value ?? '';
+
+    const next: typeof errors = {};
+    if (!name || name.length < 2) next.name = 'Enter your name (min 2 characters)';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = 'Enter a valid email';
+    if (!password || password.length < 6) next.password = 'Password must be at least 6 characters';
+    setErrors(next);
+    if (Object.keys(next).length) return;
+
+    setSubmitting(true);
     try {
-      await signup(values.name, values.email, values.password);
+      await signup(name, email, password);
       toast.success('Account created');
       navigate('/shop');
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Signup failed');
+    } finally {
+      setSubmitting(false);
     }
-  });
+  };
 
   const handleGoogle = async () => {
     try {
@@ -54,16 +63,16 @@ export function SignupPage() {
   return (
     <section className="cosmic-shell grid min-h-[78vh] place-items-center py-10 text-white">
       <div className="container-shell relative z-10 grid place-items-center">
-      <form onSubmit={submit} className="cosmic-card cosmic-form w-full max-w-lg rounded-[1.75rem] p-6 md:p-10">
+      <form onSubmit={handleSubmit} className="cosmic-card cosmic-form w-full max-w-lg rounded-[1.75rem] p-6 md:p-10">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Join Shoniverse</p>
         <h1 className="cosmic-glow-text mt-2 text-4xl font-black">Create account</h1>
         <p className="mt-3 text-sm font-bold leading-6 text-white/60">Save products, checkout faster, and track your orders.</p>
         <div className="mt-6 grid gap-4">
-          <Input label="Name" autoComplete="name" error={form.formState.errors.name?.message} {...form.register('name')} />
-          <Input label="Email" type="email" autoComplete="email" error={form.formState.errors.email?.message} {...form.register('email')} />
-          <Input label="Password" type="password" autoComplete="new-password" error={form.formState.errors.password?.message} {...form.register('password')} />
-          <Button className="bg-white text-ink hover:bg-cyan-100" type="submit" icon={<ArrowRight className="h-4 w-4" />} disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'Creating account…' : 'Sign up'}
+          <Input ref={nameRef} label="Name" autoComplete="name" error={errors.name} />
+          <Input ref={emailRef} label="Email" autoComplete="email" error={errors.email} />
+          <Input ref={passwordRef} label="Password" type="password" autoComplete="new-password" error={errors.password} />
+          <Button className="bg-white text-ink hover:bg-cyan-100" type="submit" icon={<ArrowRight className="h-4 w-4" />} disabled={submitting}>
+            {submitting ? 'Creating account…' : 'Sign up'}
           </Button>
         </div>
         <div className="my-5 flex items-center gap-3">
