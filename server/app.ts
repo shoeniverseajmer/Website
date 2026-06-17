@@ -11,7 +11,19 @@ import { errorHandler } from './middleware/errorHandler';
 export function createApp() {
   const app = express();
 
-  app.use(cors({ origin: env.clientUrl, credentials: true }));
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // Allow non-browser clients (no Origin header) and any allow-listed origin.
+        if (!origin || env.allowedOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      },
+      credentials: true
+    })
+  );
   app.use(express.json({ limit: '8mb' }));
   app.use(morgan('dev'));
 
