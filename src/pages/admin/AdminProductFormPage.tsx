@@ -16,7 +16,6 @@ import { slugify } from '../../utils/format';
 
 const schema = z.object({
   name: z.string().min(2),
-  description: z.string().min(8),
   price: z.coerce.number().positive(),
   sale_price: z.coerce.number().nonnegative().optional(),
   stock: z.coerce.number().int().nonnegative(),
@@ -48,7 +47,6 @@ export function AdminProductFormPage() {
         }
       : {
           name: '',
-          description: '',
           price: 0,
           stock: 0,
           gender_category: 'men',
@@ -68,7 +66,6 @@ export function AdminProductFormPage() {
       id,
       name: values.name,
       slug: slugify(values.name),
-      description: values.description,
       price: values.price,
       sale_price: values.sale_price || null,
       stock: values.stock,
@@ -110,7 +107,6 @@ export function AdminProductFormPage() {
               <Select label="Product type" {...form.register('product_type')}><option value="shoes">Shoes</option><option value="accessories">Accessories</option></Select>
               <Select label="Accessory type" {...form.register('accessory_type')}><option value="none">None</option><option value="belts">Belts</option><option value="wallets">Wallets</option><option value="bags">Bags</option></Select>
               <Select label="Occasion" {...form.register('occasion')}><option value="casual">Casual</option><option value="festive">Festive</option><option value="formal">Formal</option><option value="sports">Sports</option></Select>
-              <Textarea containerClassName="lg:col-span-2" label="Description" error={form.formState.errors.description?.message} {...form.register('description')} />
               <Textarea containerClassName="lg:col-span-2" label="Image URLs or Supabase Storage URLs" helperText="Paste one URL per line. Multiple images power the product gallery." {...form.register('image_urls')} />
             </div>
           </Card>
