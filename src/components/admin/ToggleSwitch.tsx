@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export function ToggleSwitch({
   checked,
   onChange,
@@ -22,11 +20,11 @@ export function ToggleSwitch({
         <span className="block font-black">{label}</span>
         {description ? <span className="mt-1 block text-sm leading-6 text-ink/55">{description}</span> : null}
       </span>
-      <span className={`relative h-8 w-14 shrink-0 rounded-full p-1 transition ${checked ? 'bg-ink' : 'bg-ink/12'}`}>
-        <motion.span
-          layout
-          transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-          className={`block h-6 w-6 rounded-full bg-white shadow-sm ${checked ? 'ml-6' : 'ml-0'}`}
+      <span
+        className={`relative inline-flex h-8 w-14 shrink-0 items-center rounded-full p-1 transition-colors duration-200 ${checked ? 'bg-ink' : 'bg-ink/20'}`}
+      >
+        <span
+          className={`h-6 w-6 rounded-full bg-white shadow-md transition-transform duration-200 ${checked ? 'translate-x-6' : 'translate-x-0'}`}
         />
       </span>
     </button>
