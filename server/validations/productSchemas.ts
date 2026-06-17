@@ -15,7 +15,7 @@ export const productUpsertSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(2),
   slug: z.string().min(2),
-  description: z.string().min(8),
+  description: z.string().optional(),
   price: z.coerce.number().positive(),
   sale_price: z.coerce.number().nonnegative().nullable().optional(),
   stock: z.coerce.number().int().nonnegative(),
@@ -27,6 +27,19 @@ export const productUpsertSchema = z.object({
   is_on_sale: z.boolean().default(false),
   is_active: z.boolean().default(true),
   image_urls: z.array(z.string().url()).optional()
+});
+
+export const imageUploadSchema = z.object({
+  files: z
+    .array(
+      z.object({
+        filename: z.string().min(1),
+        content_type: z.string().regex(/^image\//, 'Only image files are allowed'),
+        data: z.string().min(1)
+      })
+    )
+    .min(1)
+    .max(8)
 });
 
 export const categoryCreateSchema = z.object({

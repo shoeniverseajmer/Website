@@ -8,9 +8,9 @@ import { Button } from '../../components/ui/Button';
 import { Card, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
-import { Textarea } from '../../components/ui/Textarea';
 import { toast } from '../../components/ui/Toast';
 import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
+import { ImageUploader } from '../../components/admin/ImageUploader';
 import { adminService } from '../../services/adminService';
 import { slugify } from '../../utils/format';
 
@@ -23,7 +23,7 @@ const schema = z.object({
   product_type: z.enum(['shoes', 'accessories']),
   accessory_type: z.enum(['belts', 'wallets', 'bags', 'none']),
   occasion: z.enum(['casual', 'festive', 'formal', 'sports']),
-  image_urls: z.string().optional(),
+  image_urls: z.array(z.string()).optional(),
   is_bestseller: z.boolean().optional(),
   is_on_sale: z.boolean().optional(),
   is_active: z.boolean().optional()
@@ -43,7 +43,7 @@ export function AdminProductFormPage() {
           ...product,
           accessory_type: product.accessory_type ?? 'none',
           sale_price: product.sale_price ?? undefined,
-          image_urls: product.product_images?.map((image) => image.image_url).join('\n') ?? ''
+          image_urls: product.product_images?.map((image) => image.image_url) ?? []
         }
       : {
           name: '',
@@ -53,13 +53,13 @@ export function AdminProductFormPage() {
           product_type: 'shoes',
           accessory_type: 'none',
           occasion: 'casual',
-          image_urls: '',
+          image_urls: [],
           is_active: true,
           is_bestseller: false,
           is_on_sale: false
         }
   });
-  const imageUrls = form.watch('image_urls')?.split('\n').map((url) => url.trim()).filter(Boolean) ?? [];
+  const imageUrls = form.watch('image_urls') ?? [];
 
   const submit = form.handleSubmit(async (values) => {
     await adminService.upsertProduct({
@@ -87,7 +87,7 @@ export function AdminProductFormPage() {
       <AdminPageHeader
         eyebrow="Product studio"
         title={id ? 'Edit product' : 'Add product'}
-        copy="Create premium catalogue entries with merchandising flags, stock, pricing, and image URLs."
+        copy="Create premium catalogue entries with merchandising flags, stock, pricing, and drag-and-drop images."
       />
       <form onSubmit={submit} className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
@@ -107,8 +107,17 @@ export function AdminProductFormPage() {
               <Select label="Product type" {...form.register('product_type')}><option value="shoes">Shoes</option><option value="accessories">Accessories</option></Select>
               <Select label="Accessory type" {...form.register('accessory_type')}><option value="none">None</option><option value="belts">Belts</option><option value="wallets">Wallets</option><option value="bags">Bags</option></Select>
               <Select label="Occasion" {...form.register('occasion')}><option value="casual">Casual</option><option value="festive">Festive</option><option value="formal">Formal</option><option value="sports">Sports</option></Select>
-              <Textarea containerClassName="lg:col-span-2" label="Image URLs or Supabase Storage URLs" helperText="Paste one URL per line. Multiple images power the product gallery." {...form.register('image_urls')} />
             </div>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div>
+                <CardTitle>Product images</CardTitle>
+                <CardDescription>Drag & drop or click to upload. The first image is the storefront cover.</CardDescription>
+              </div>
+            </CardHeader>
+            <ImageUploader value={imageUrls} onChange={(urls) => form.setValue('image_urls', urls, { shouldDirty: true })} />
           </Card>
         </div>
 
@@ -126,16 +135,6 @@ export function AdminProductFormPage() {
               <label className="flex items-center justify-between rounded-2xl bg-bone p-4 text-sm font-bold"><span>Active</span><input type="checkbox" {...form.register('is_active')} /></label>
             </div>
             <Button className="mt-5" type="submit" fullWidth>Save product</Button>
-          </Card>
-
-          <Card variant="dark">
-            <CardTitle>Image preview</CardTitle>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              {imageUrls.slice(0, 4).map((url) => (
-                <img key={url} src={url} alt="Product preview" className="aspect-square rounded-2xl object-cover" />
-              ))}
-              {!imageUrls.length ? <p className="col-span-2 text-sm leading-6 text-white/58">Image previews appear after URLs are added.</p> : null}
-            </div>
           </Card>
         </aside>
       </form>

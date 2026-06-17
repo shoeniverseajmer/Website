@@ -1,7 +1,42 @@
 import { supabaseAdmin } from '../config/supabase';
+import { env } from '../config/env';
 import { mockDb } from '../utils/mock';
-import { notFound } from '../utils/apiError';
+import { ApiError, notFound } from '../utils/apiError';
 import type { Category, Product, StoreSettings } from '../../src/types';
+
+type UploadInput = {
+  filename: string;
+  content_type: string;
+  data: string; // base64 (without data URL prefix)
+};
+
+const safeExtension = (filename: string, contentType: string) => {
+  const fromName = filename.includes('.') ? filename.split('.').pop()?.toLowerCase() : undefined;
+  if (fromName && /^[a-z0-9]{2,5}$/.test(fromName)) return fromName;
+  return contentType.split('/')[1]?.toLowerCase() ?? 'jpg';
+};
+
+export async function uploadProductImages(files: UploadInput[]) {
+  if (!supabaseAdmin) {
+    // Demo mode: echo back the base64 as data URLs so the UI still works locally.
+    return files.map((file) => `data:${file.content_type};base64,${file.data}`);
+  }
+
+  const urls: string[] = [];
+  for (const file of files) {
+    const buffer = Buffer.from(file.data, 'base64');
+    const ext = safeExtension(file.filename, file.content_type);
+    const path = `products/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const { error } = await supabaseAdmin.storage.from(env.storageBucket).upload(path, buffer, {
+      contentType: file.content_type,
+      upsert: false
+    });
+    if (error) throw new ApiError(500, `Image upload failed: ${error.message}`);
+    const { data } = supabaseAdmin.storage.from(env.storageBucket).getPublicUrl(path);
+    urls.push(data.publicUrl);
+  }
+  return urls;
+}
 
 export async function adminProducts() {
   if (!supabaseAdmin) return mockDb.products;
@@ -33,7 +68,14 @@ export async function upsertProduct(product: ProductPayload) {
   }
 
   const { image_urls, ...productPayload } = product;
-  const { data, error } = await supabaseAdmin.from('products').upsert(productPayload).select().single();
+  // `description` is NOT NULL in the DB but the admin form no longer collects it.
+  // Default to empty string on create; omit on edit so existing values are preserved.
+  const isCreate = !productPayload.id;
+  const payload = {
+    ...productPayload,
+    description: productPayload.description ?? (isCreate ? '' : undefined)
+  };
+  const { data, error } = await supabaseAdmin.from('products').upsert(payload).select().single();
   if (error) throw error;
   if (image_urls) {
     await supabaseAdmin.from('product_images').delete().eq('product_id', data.id);

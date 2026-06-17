@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { createCategory, adminProducts, deleteCategory, deleteProduct, getSettings, saveSettings, upsertProduct } from '../services/adminService';
+import { createCategory, adminProducts, deleteCategory, deleteProduct, getSettings, saveSettings, upsertProduct, uploadProductImages } from '../services/adminService';
 import { listCategories } from '../services/productService';
 import { listOrders, updateOrderStatus } from '../services/orderService';
 import { asyncHandler } from '../utils/asyncHandler';
@@ -16,6 +16,10 @@ export const adminProductsUpsert = asyncHandler(async (request: Request, respons
 export const adminProductsDelete = asyncHandler(async (request: Request, response: Response) => {
   await deleteProduct(request.params.id);
   noContent(response);
+});
+
+export const adminUploadImages = asyncHandler(async (request: Request, response: Response) => {
+  ok(response, await uploadProductImages(request.body.files));
 });
 
 export const adminCategoriesIndex = asyncHandler(async (_request: Request, response: Response) => {
