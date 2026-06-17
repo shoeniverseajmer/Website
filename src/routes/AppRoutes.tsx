@@ -50,12 +50,17 @@ export const router = createBrowserRouter([
       { path: '/product/:slug', element: suspense(<ProductDetailPage />) },
       { path: '/cart', element: suspense(<CartPage />) },
       { path: '/wishlist', element: suspense(<WishlistPage />) },
-      { path: '/checkout', element: suspense(<CheckoutPage />) },
-      { path: '/orders', element: suspense(<OrdersPage />) },
       { path: '/login', element: suspense(<LoginPage />) },
       { path: '/signup', element: suspense(<SignupPage />) },
-      { path: '/account', element: suspense(<AccountPage />) },
-      { path: '/auth/callback', element: suspense(<AuthCallbackPage />) }
+      { path: '/auth/callback', element: suspense(<AuthCallbackPage />) },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          { path: '/checkout', element: suspense(<CheckoutPage />) },
+          { path: '/orders', element: suspense(<OrdersPage />) },
+          { path: '/account', element: suspense(<AccountPage />) }
+        ]
+      }
     ]
   },
   { path: '/admin/login', element: suspense(<LoginPage admin />) },

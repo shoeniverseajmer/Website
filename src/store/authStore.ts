@@ -37,6 +37,6 @@ export const useAuthStore = create<AuthState>()(
       },
       setUser: (user) => set({ user })
     }),
-    { name: 'solelux-auth' }
+    { name: 'shoniverse-auth' }
   )
 );
