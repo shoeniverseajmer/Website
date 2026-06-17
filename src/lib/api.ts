@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { supabase } from './supabase';
 
+// The backend mounts every route under `/api`. VITE_API_URL is sometimes set
+// without that suffix, so normalize it to always end in exactly one `/api`.
+const rawApiUrl = (import.meta.env.VITE_API_URL ?? '').trim().replace(/\/+$/, '');
+const baseURL = rawApiUrl ? (rawApiUrl.endsWith('/api') ? rawApiUrl : `${rawApiUrl}/api`) : '/api';
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? '/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json'
   }
