@@ -8,7 +8,9 @@ interface AuthState {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
+  setUser: (user: Profile | null) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -26,10 +28,14 @@ export const useAuthStore = create<AuthState>()(
         const user = await authService.signUp(name, email, password);
         set({ user, loading: false });
       },
+      loginWithGoogle: async () => {
+        await authService.signInWithGoogle();
+      },
       logout: async () => {
         await authService.signOut();
         set({ user: null });
-      }
+      },
+      setUser: (user) => set({ user })
     }),
     { name: 'solelux-auth' }
   )

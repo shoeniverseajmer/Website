@@ -2,6 +2,25 @@ import { supabase } from '../lib/supabase';
 import type { Profile } from '../types';
 
 export const authService = {
+  async signInWithGoogle() {
+    if (!supabase) throw new Error('Supabase is not configured');
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback` }
+    });
+    if (error) throw error;
+  },
+
+  sessionToProfile(user: { id: string; email?: string; user_metadata: Record<string, unknown>; created_at: string }): Profile {
+    return {
+      id: user.id,
+      name: String(user.user_metadata.full_name ?? user.user_metadata.name ?? 'Customer'),
+      email: user.email ?? '',
+      role: (user.user_metadata.role ?? 'customer') as Profile['role'],
+      created_at: user.created_at
+    };
+  },
+
   async signUp(name: string, email: string, password: string) {
     if (!supabase) {
       return { id: 'demo-user', name, email, role: 'customer', created_at: new Date().toISOString() } satisfies Profile;

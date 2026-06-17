@@ -139,7 +139,7 @@ export function ProductDetailPage() {
               {Array.from({ length: 5 }).map((_, index) => (
                 <Star key={index} className="h-4 w-4 fill-cyan-200 text-cyan-200" />
               ))}
-              <span className="text-sm font-bold text-white/55">4.9 · 128 reviews</span>
+              <span className="text-sm font-bold text-white/55">4.9 · Verified buyers</span>
             </div>
             <p className="mt-5 text-base font-bold leading-8 text-white/65">{product.description}</p>
             <div className="mt-6 flex items-baseline gap-3">
