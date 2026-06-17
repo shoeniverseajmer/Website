@@ -1,16 +1,26 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { userNavLinks } from './navigationConfig';
+import { useAuthStore } from '../../store/authStore';
 import { cn } from '../../utils/cn';
 
 export function DesktopNavigation() {
   const location = useLocation();
   const current = `${location.pathname}${location.search}`;
+  const user = useAuthStore((state) => state.user);
+
+  const links = user
+    ? [...userNavLinks, { to: '/account', label: 'ACCOUNT' }]
+    : userNavLinks;
 
   return (
     <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">
-      {userNavLinks.map((link) => {
-        const isActive = link.to.includes('?') ? current === link.to : location.pathname === link.to && !location.search.includes('sale=true') && !location.search.includes('bestseller=true');
+      {links.map((link) => {
+        const isActive = link.to.includes('?')
+          ? current === link.to
+          : location.pathname === link.to &&
+            !location.search.includes('sale=true') &&
+            !location.search.includes('bestseller=true');
         return (
           <Link key={link.to} to={link.to}>
             <motion.span
@@ -21,7 +31,12 @@ export function DesktopNavigation() {
               )}
             >
               {link.label}
-              {isActive ? <motion.span layoutId="desktop-nav-pill" className="absolute inset-0 -z-10 rounded-full bg-white/12 shadow-sm ring-1 ring-white/15" /> : null}
+              {isActive ? (
+                <motion.span
+                  layoutId="desktop-nav-pill"
+                  className="absolute inset-0 -z-10 rounded-full bg-white/12 shadow-sm ring-1 ring-white/15"
+                />
+              ) : null}
             </motion.span>
           </Link>
         );

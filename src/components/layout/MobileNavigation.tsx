@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Instagram, MapPin, X } from 'lucide-react';
 import { GlobalSearchBar } from './GlobalSearchBar';
+import { User } from 'lucide-react';
 import { mobilePrimaryLinks, userNavLinks } from './navigationConfig';
 import { cn } from '../../utils/cn';
 import { useAuthStore } from '../../store/authStore';
@@ -18,8 +19,11 @@ export function MobileNavigation({
   wishlistCount: number;
 }) {
   const user = useAuthStore((state) => state.user);
-  const accountHref = user ? (user.role === 'admin' ? '/admin/dashboard' : '/orders') : '/login';
+  const accountHref = user ? (user.role === 'admin' ? '/admin/dashboard' : '/account') : '/login';
   const location = useLocation();
+  const allLinks = user
+    ? [...userNavLinks, { to: '/account', label: 'ACCOUNT', icon: User }]
+    : userNavLinks;
   const current = `${location.pathname}${location.search}`;
 
   return (
@@ -50,7 +54,7 @@ export function MobileNavigation({
               <div className="relative z-10 space-y-5 p-4">
                 <GlobalSearchBar autoFocus onSearch={onClose} />
                 <nav className="grid gap-2" aria-label="Mobile menu">
-                  {userNavLinks.map((link) => {
+                  {allLinks.map((link) => {
                     const Icon = link.icon;
                     const isActive = link.to.includes('?') ? current === link.to : location.pathname === link.to && !location.search.includes('sale=true') && !location.search.includes('bestseller=true');
                     return (
