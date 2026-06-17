@@ -21,7 +21,7 @@ export function CartPage() {
           <h1 className="cosmic-glow-text mt-2 text-4xl font-black md:text-6xl">Cart</h1>
           <p className="mt-3 max-w-xl text-sm font-bold leading-6 text-white/58">Review quantities, remove items, then choose delivery or pickup in checkout.</p>
         </div>
-        <Button className="border-white/15 bg-white/10 text-black hover:bg-white hover:text-ink" icon={<ArrowLeft className="h-4 w-4" />}>
+        <Button className="border-white/15 bg-white/10 text-white hover:bg-white hover:text-ink" icon={<ArrowLeft className="h-4 w-4" />}>
           <Link to="/shop">Continue shopping</Link>
         </Button>
       </div>

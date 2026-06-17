@@ -90,7 +90,7 @@ export function AccountPage() {
             </div>
 
             {editing ? (
-              <form onSubmit={saveProfile} className="space-y-4">
+              <form onSubmit={saveProfile} className="cosmic-form space-y-4">
                 <Input label="Name" error={form.formState.errors.name?.message} {...form.register('name')} />
                 <Input label="Phone" type="tel" placeholder="+91 98765 43210" error={form.formState.errors.phone?.message} {...form.register('phone')} />
               </form>

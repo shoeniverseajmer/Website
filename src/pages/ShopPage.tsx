@@ -136,7 +136,7 @@ export function ShopPage() {
 
       <div className="mb-4 flex items-center justify-between lg:hidden">
         <p className="text-sm font-bold text-white/60">{sortedProducts.length} products</p>
-        <Button className="border-white/15 bg-white/10 text-black hover:bg-white hover:text-ink" icon={<Filter className="h-4 w-4" />} onClick={() => setFiltersOpen(true)}>
+        <Button className="border-white/15 bg-white/10 text-white hover:bg-white hover:text-ink" icon={<Filter className="h-4 w-4" />} onClick={() => setFiltersOpen(true)}>
           Refine
         </Button>
       </div>
@@ -151,7 +151,7 @@ export function ShopPage() {
           <ProductGrid products={visibleProducts} loading={isLoading} />
           {visibleCount < sortedProducts.length ? (
             <div className="mt-8 grid place-items-center">
-              <Button className="border-white/15 bg-white/10 text-black hover:bg-white hover:text-ink" onClick={() => setVisibleCount((count) => count + 6)}>
+              <Button className="border-white/15 bg-white/10 text-white hover:bg-white hover:text-ink" onClick={() => setVisibleCount((count) => count + 6)}>
                 Load more
               </Button>
             </div>

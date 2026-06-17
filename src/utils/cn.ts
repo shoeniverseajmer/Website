@@ -1,5 +1,5 @@
-type ClassValue = string | false | null | undefined;
+import { twMerge } from 'tailwind-merge';
 
-export function cn(...classes: ClassValue[]) {
-  return classes.filter(Boolean).join(' ');
+export function cn(...classes: (string | false | null | undefined)[]) {
+  return twMerge(classes.filter(Boolean).join(' '));
 }

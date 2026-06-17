@@ -151,7 +151,7 @@ export function CheckoutPage() {
             Choose delivery or pickup, apply a coupon, and select a payment method. The summary updates instantly.
           </p>
         </div>
-        <Button className="border-white/15 bg-white/10 text-black hover:bg-white hover:text-ink">
+        <Button className="border-white/15 bg-white/10 text-white hover:bg-white hover:text-ink">
           <Link to="/cart">Back to cart</Link>
         </Button>
       </div>

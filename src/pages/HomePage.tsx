@@ -77,7 +77,7 @@ export function HomePage() {
               <Button className="bg-white text-ink shadow-[0_0_36px_rgba(120,247,255,0.34)] hover:bg-cyan-100" size="lg" rightIcon={<ArrowRight className="h-5 w-5" />}>
                 <Link to="/shop">Enter the drop</Link>
               </Button>
-              <Button className="border border-white/15 bg-white/10 text-black hover:bg-white hover:text-ink" size="lg">
+              <Button className="border border-white/15 bg-white/10 text-white hover:bg-white hover:text-ink" size="lg">
                 <Link to="/shop?bestseller=true">Apex bestsellers</Link>
               </Button>
             </div>

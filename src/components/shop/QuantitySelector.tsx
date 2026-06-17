@@ -2,7 +2,7 @@ import { Minus, Plus } from 'lucide-react';
 
 export function QuantitySelector({ value, onChange }: { value: number; onChange: (value: number) => void }) {
   return (
-    <div className="inline-grid h-12 grid-cols-[46px_52px_46px] overflow-hidden rounded-full border border-ink/10 bg-white shadow-sm">
+    <div className="inline-grid h-12 grid-cols-[46px_52px_46px] overflow-hidden rounded-full border border-ink/10 bg-white text-ink shadow-sm">
       <button className="focus-ring grid place-items-center" onClick={() => onChange(Math.max(1, value - 1))} type="button">
         <Minus className="h-4 w-4" />
       </button>
