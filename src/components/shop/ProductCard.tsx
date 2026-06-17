@@ -27,7 +27,11 @@ export function ProductCard({ product }: { product: Product }) {
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-[#111116]">
         <Link to={`/product/${product.slug}`}>
-          <img src={image} alt={product.name} loading="lazy" className="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100" />
+          {image ? (
+            <img src={image} alt={product.name} loading="lazy" className="h-full w-full object-cover opacity-90 transition duration-700 group-hover:scale-105 group-hover:opacity-100" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-xs font-black uppercase tracking-widest text-white/30">No image</div>
+          )}
         </Link>
         <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black via-black/42 to-transparent opacity-90 transition duration-500" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/60 to-transparent" />
@@ -45,9 +49,11 @@ export function ProductCard({ product }: { product: Product }) {
               <button
                 key={size}
                 className="h-8 rounded-full border border-white/15 bg-white/10 text-xs font-black text-white transition hover:border-white hover:bg-white hover:text-ink"
-                onClick={() => {
-                  add(product);
-                  toast.success(`${product.name} size ${size} added to cart`);
+                onClick={(e) => {
+                  e.preventDefault();
+                  const variant = product.product_variants?.find((v) => v.size === size);
+                  add({ ...product, product_variants: variant ? [variant] : [] });
+                  toast.success(`${product.name} · Size ${size} added to cart`);
                 }}
               >
                 {size}

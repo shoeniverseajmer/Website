@@ -152,7 +152,7 @@ export function AdminDashboardPage() {
           {orders.slice(0, 5).map((order) => (
             <div key={order.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-bone p-4">
               <div>
-                <p className="font-black">#{order.id}</p>
+                <p className="font-black">#{order.id.slice(0, 8).toUpperCase()}</p>
                 <p className="text-sm text-ink/55">{new Date(order.created_at).toLocaleDateString()}</p>
               </div>
               <StatusBadge value={order.order_status} tone={orderStatusTone(order.order_status)} />

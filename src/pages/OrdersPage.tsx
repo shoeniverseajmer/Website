@@ -24,7 +24,7 @@ export function OrdersPage() {
                   <PackageCheck className="h-5 w-5" />
                 </div>
                 <div>
-                <h2 className="font-black">#{order.id}</h2>
+                <h2 className="font-black">#{order.id.slice(0, 8).toUpperCase()}</h2>
                 <p className="text-sm text-white/60">{new Date(order.created_at).toLocaleDateString()} · {toTitleCase(order.order_type)}</p>
                 </div>
               </div>

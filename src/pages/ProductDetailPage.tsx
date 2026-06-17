@@ -270,8 +270,8 @@ export function ProductDetailPage() {
                 <p className="mt-1 text-sm text-white/65">Care guidance and exchange support for every order.</p>
               </div>
             </div>
-            <Link to="/checkout" className="rounded-full bg-white px-5 py-3 text-sm font-black text-ink">
-              Checkout
+            <Link to="/orders" className="rounded-full bg-white px-5 py-3 text-sm font-black text-ink">
+              My orders
             </Link>
           </div>
         </div>

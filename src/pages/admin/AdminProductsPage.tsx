@@ -52,9 +52,15 @@ export function AdminProductsPage() {
   };
 
   const deleteProduct = async (product: Product) => {
+    if (!window.confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
     setProducts((current) => current.filter((item) => item.id !== product.id));
-    await adminService.deleteProduct(product.id);
-    toast.success('Product deleted');
+    try {
+      await adminService.deleteProduct(product.id);
+      toast.success('Product deleted');
+    } catch {
+      setProducts(fetchedProducts);
+      toast.error('Failed to delete product');
+    }
   };
 
   return (

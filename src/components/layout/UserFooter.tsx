@@ -5,8 +5,8 @@ const footerGroups = [
   {
     title: 'GET IN TOUCH',
     links: [
-      { label: 'Whatsapp : +91 9606081463', to: '/shop' },
-      { label: 'Support: hello@wearcomet.com', to: '/shop' },
+      { label: 'Whatsapp : +91 9606081463', to: 'https://wa.me/919606081463' },
+      { label: 'Support: surajnandan78@gmail.com', to: 'mailto:surajnandan78@gmail.com' },
       { label: 'Location', to: 'https://share.google/sBASapABqQlWChE2U' },
       { label: 'Instagram', to: 'https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr' }
     ]
@@ -50,7 +50,9 @@ export function UserFooter() {
               <a href="https://share.google/sBASapABqQlWChE2U" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 transition hover:text-white">
                 <MapPin className="h-4 w-4 text-cyan-200" /> Location
               </a>
-              <span className="inline-flex items-center gap-2"><Mail className="h-4 w-4 text-cyan-200" /> hello@wearcomet.com</span>
+              <a href="mailto:surajnandan78@gmail.com" className="inline-flex items-center gap-2 transition hover:text-white">
+                <Mail className="h-4 w-4 text-cyan-200" /> surajnandan78@gmail.com
+              </a>
               <a
                 href="https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr"
                 target="_blank"
@@ -59,7 +61,9 @@ export function UserFooter() {
               >
                 <Instagram className="h-4 w-4 text-cyan-200" /> Instagram
               </a>
-              <span className="inline-flex items-center gap-2"><MessageCircle className="h-4 w-4 text-cyan-200" /> Track your order anytime</span>
+              <a href="https://wa.me/919606081463" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 transition hover:text-white">
+                <MessageCircle className="h-4 w-4 text-cyan-200" /> Track your order on WhatsApp
+              </a>
             </div>
           </div>
           <div className="grid gap-8 sm:grid-cols-3">

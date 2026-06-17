@@ -71,7 +71,7 @@ export function HomePage() {
               Sneakers from another frequency
             </h1>
             <p className="mt-6 max-w-xl text-base font-bold leading-8 text-white/66 md:text-lg">
-              Comet-style drops reimagined as a cosmic storefront: neon trails, deep-space panels, and chunky silhouettes that feel impossible to ignore.
+              Homegrown sneaker energy out of Ajmer — bold colorways, quick drops, and chunky silhouettes that feel impossible to ignore.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Button className="bg-white text-ink shadow-[0_0_36px_rgba(120,247,255,0.34)] hover:bg-cyan-100" size="lg" rightIcon={<ArrowRight className="h-5 w-5" />}>
@@ -99,9 +99,6 @@ export function HomePage() {
           <motion.div initial={{ opacity: 0, scale: 0.96, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="relative min-h-[540px]">
             <div className="absolute left-1/2 top-1/2 h-[min(68vw,560px)] w-[min(68vw,560px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
             <div className="absolute left-1/2 top-1/2 h-[min(54vw,430px)] w-[min(54vw,430px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-200/20" />
-            <div className="absolute left-2 top-10 hidden rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white/70 backdrop-blur md:block">
-              mission 09
-            </div>
             <img
               src={heroImage}
               alt={heroProduct?.name ?? 'Cosmic sneaker drop'}
@@ -114,7 +111,7 @@ export function HomePage() {
                   <h2 className="mt-1 text-2xl font-black">{heroProduct?.name ?? 'Apex Evergreen'}</h2>
                   <p className="mt-1 text-sm font-bold text-white/52">{formatCurrency(heroProduct?.sale_price ?? heroProduct?.price ?? 6299)}</p>
                 </div>
-                <Link to="/shop" className="grid h-12 w-12 place-items-center rounded-full bg-white text-ink shadow-[0_0_28px_rgba(170,255,72,0.26)]">
+                <Link to={heroProduct ? `/product/${heroProduct.slug}` : '/shop'} className="grid h-12 w-12 place-items-center rounded-full bg-white text-ink shadow-[0_0_28px_rgba(170,255,72,0.26)]">
                   <ChevronRight className="h-5 w-5" />
                 </Link>
               </div>

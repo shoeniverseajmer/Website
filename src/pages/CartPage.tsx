@@ -32,8 +32,8 @@ export function CartPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="cosmic-card rounded-[1.5rem] p-5">
                 <Sparkles className="mb-4 h-5 w-5 text-cyan-200" />
-                <p className="font-black">Cosmic checkout flow</p>
-                <p className="mt-1 text-sm leading-6 text-white/58">Fast fulfillment selection, coupon support, and payment method choice.</p>
+                <p className="font-black">Smooth checkout flow</p>
+                <p className="mt-1 text-sm leading-6 text-white/58">Choose delivery or pickup, apply a coupon, and pick your payment method.</p>
               </motion.div>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="cosmic-card rounded-[1.5rem] p-5">
                 <div className="mb-4 flex gap-3">

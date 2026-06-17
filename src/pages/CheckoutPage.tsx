@@ -65,7 +65,7 @@ export function CheckoutPage() {
 
   const subtotal = items.reduce((sum, item) => sum + (item.product.sale_price ?? item.product.price) * item.quantity, 0);
   const deliveryCharge = orderType === 'delivery' ? settings?.delivery_charge ?? 0 : 0;
-  const discount = couponCode === 'COMET10' ? Math.round(subtotal * 0.1) : couponCode === 'ORBIT500' ? Math.min(500, subtotal) : 0;
+  const discount = couponCode === 'SHONI10' ? Math.round(subtotal * 0.1) : couponCode === 'SAVE500' ? Math.min(500, subtotal) : 0;
   const total = Math.max(0, subtotal + deliveryCharge - discount);
 
   const applyCoupon = (code: string) => {
@@ -74,7 +74,7 @@ export function CheckoutPage() {
       toast.error('Enter a coupon code');
       return;
     }
-    if (!['COMET10', 'ORBIT500'].includes(normalized)) {
+    if (!['SHONI10', 'SAVE500'].includes(normalized)) {
       toast.error('Coupon is not valid');
       return;
     }
@@ -232,7 +232,7 @@ export function CheckoutPage() {
               <div>
                 <h2 className="font-black">Protected checkout</h2>
                 <p className="mt-1 text-sm leading-6 text-white/62">
-                  Razorpay and UPI are structured for gateway integration. COD can be controlled from store settings.
+                  Your order details are encrypted and handled securely. COD payments are collected on delivery.
                 </p>
               </div>
             </div>
