@@ -15,7 +15,7 @@ export const mobilePrimaryLinks = [
   { to: '/shop', label: 'Shop', icon: Search },
   { to: '/wishlist', label: 'Wishlist', icon: Heart },
   { to: '/cart', label: 'Cart', icon: ShoppingBag },
-  { to: '/login', label: 'Account', icon: User }
+  { to: '/account', label: 'Account', icon: User }
 ];
 
 export const adminNavLinks = [

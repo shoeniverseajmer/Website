@@ -21,6 +21,7 @@ const OrdersPage = lazyPage(() => import('../pages/OrdersPage'), 'OrdersPage');
 const LoginPage = lazyPage(() => import('../pages/auth/LoginPage'), 'LoginPage');
 const SignupPage = lazyPage(() => import('../pages/auth/SignupPage'), 'SignupPage');
 const AuthCallbackPage = lazyPage(() => import('../pages/auth/AuthCallbackPage'), 'AuthCallbackPage');
+const AccountPage = lazyPage(() => import('../pages/AccountPage'), 'AccountPage');
 const AdminDashboardPage = lazyPage(() => import('../pages/admin/AdminDashboardPage'), 'AdminDashboardPage');
 const AdminProductsPage = lazyPage(() => import('../pages/admin/AdminProductsPage'), 'AdminProductsPage');
 const AdminProductFormPage = lazyPage(() => import('../pages/admin/AdminProductFormPage'), 'AdminProductFormPage');
@@ -53,6 +54,7 @@ export const router = createBrowserRouter([
       { path: '/orders', element: suspense(<OrdersPage />) },
       { path: '/login', element: suspense(<LoginPage />) },
       { path: '/signup', element: suspense(<SignupPage />) },
+      { path: '/account', element: suspense(<AccountPage />) },
       { path: '/auth/callback', element: suspense(<AuthCallbackPage />) }
     ]
   },

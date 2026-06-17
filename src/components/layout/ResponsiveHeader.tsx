@@ -19,7 +19,7 @@ export function ResponsiveHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const user = useAuthStore((state) => state.user);
-  const accountHref = user ? (user.role === 'admin' ? '/admin/dashboard' : '/orders') : '/login';
+  const accountHref = user ? (user.role === 'admin' ? '/admin/dashboard' : '/account') : '/login';
 
   return (
     <>

@@ -16,9 +16,17 @@ export const authService = {
       id: user.id,
       name: String(user.user_metadata.full_name ?? user.user_metadata.name ?? 'Customer'),
       email: user.email ?? '',
+      phone: user.user_metadata.phone ? String(user.user_metadata.phone) : undefined,
       role: (user.user_metadata.role ?? 'customer') as Profile['role'],
       created_at: user.created_at
     };
+  },
+
+  async updateProfile(updates: { name?: string; phone?: string }) {
+    if (!supabase) throw new Error('Supabase is not configured');
+    const { data, error } = await supabase.auth.updateUser({ data: updates });
+    if (error) throw error;
+    return authService.sessionToProfile(data.user);
   },
 
   async signUp(name: string, email: string, password: string) {
