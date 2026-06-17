@@ -31,7 +31,7 @@ export function SignupPage() {
   const navigate = useNavigate();
   const signup = useAuthStore((state) => state.signup);
   const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
-  const form = useForm<Values>({ resolver: zodResolver(schema) });
+  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { name: '', email: '', password: '' } });
 
   const submit = form.handleSubmit(async (values) => {
     try {
@@ -59,9 +59,9 @@ export function SignupPage() {
         <h1 className="cosmic-glow-text mt-2 text-4xl font-black">Create account</h1>
         <p className="mt-3 text-sm font-bold leading-6 text-white/60">Save products, checkout faster, and track your orders.</p>
         <div className="mt-6 grid gap-4">
-          <Input label="Name" error={form.formState.errors.name?.message} {...form.register('name')} />
-          <Input label="Email" error={form.formState.errors.email?.message} {...form.register('email')} />
-          <Input label="Password" type="password" error={form.formState.errors.password?.message} {...form.register('password')} />
+          <Input label="Name" autoComplete="name" error={form.formState.errors.name?.message} {...form.register('name')} />
+          <Input label="Email" type="email" autoComplete="email" error={form.formState.errors.email?.message} {...form.register('email')} />
+          <Input label="Password" type="password" autoComplete="new-password" error={form.formState.errors.password?.message} {...form.register('password')} />
           <Button className="bg-white text-ink hover:bg-cyan-100" type="submit" icon={<ArrowRight className="h-4 w-4" />} disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? 'Creating account…' : 'Sign up'}
           </Button>

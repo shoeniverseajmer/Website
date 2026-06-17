@@ -30,7 +30,7 @@ export function LoginPage({ admin = false }: { admin?: boolean }) {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
-  const form = useForm<Values>({ resolver: zodResolver(schema) });
+  const form = useForm<Values>({ resolver: zodResolver(schema), defaultValues: { email: '', password: '' } });
 
   const submit = form.handleSubmit(async (values) => {
     try {
@@ -67,8 +67,8 @@ export function LoginPage({ admin = false }: { admin?: boolean }) {
           <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">{admin ? 'Operator' : 'Account'}</p>
           <h1 className="mt-2 text-4xl font-black">{admin ? 'Admin login' : 'Welcome back'}</h1>
           <div className="mt-6 grid gap-4">
-            <Input label="Email" error={form.formState.errors.email?.message} {...form.register('email')} />
-            <Input label="Password" type="password" error={form.formState.errors.password?.message} {...form.register('password')} />
+            <Input label="Email" type="email" autoComplete="email" error={form.formState.errors.email?.message} {...form.register('email')} />
+            <Input label="Password" type="password" autoComplete="current-password" error={form.formState.errors.password?.message} {...form.register('password')} />
             <Button className="bg-white text-ink hover:bg-cyan-100" type="submit" icon={<ArrowRight className="h-4 w-4" />} disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? 'Signing in…' : 'Login'}
             </Button>
