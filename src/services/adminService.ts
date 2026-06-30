@@ -3,6 +3,7 @@ import type { Category, Product, StoreSettings } from '../types';
 
 type ProductUpsertInput = Partial<Product> & {
   image_urls?: string[];
+  variants?: { size: string; color: string; stock: number }[];
 };
 
 function fileToBase64(file: File): Promise<string> {

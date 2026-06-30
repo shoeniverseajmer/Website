@@ -32,9 +32,9 @@ export function ResponsiveHeader({
         >
           <Link to="/" className="flex shrink-0 items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-full bg-white/95 p-1 shadow-soft ring-1 ring-white/10">
-              <img src="/logo.png" alt="Shoniverse" className="h-10 w-10 rounded-full object-contain" />
+              <img src="/logo.png" alt="Shoeniverse" className="h-10 w-10 rounded-full object-contain" />
             </span>
-            <span className="cosmic-glow-text hidden text-2xl font-black uppercase tracking-[0.08em] sm:block">Shoniverse</span>
+            <span className="cosmic-glow-text hidden text-2xl font-black uppercase tracking-[0.08em] sm:block">Shoeniverse</span>
           </Link>
 
           <DesktopNavigation />

@@ -63,10 +63,10 @@ export function LoginPage({ admin = false }: { admin?: boolean }) {
       <div className="container-shell relative z-10 grid place-items-center">
       <div className="cosmic-card grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] md:grid-cols-[0.95fr_1.05fr]">
         <div className="relative hidden min-h-[560px] bg-ink md:block">
-          <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1100&q=90" alt="Shoniverse login" className="h-full w-full object-cover opacity-80" />
+          <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=1100&q=90" alt="Shoeniverse login" className="h-full w-full object-cover opacity-80" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/28 to-transparent" />
           <div className="absolute bottom-8 left-8 right-8 text-white">
-            <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Shoniverse access</p>
+            <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Shoeniverse access</p>
             <h2 className="cosmic-glow-text mt-3 text-4xl font-black leading-tight">Your orbit is waiting.</h2>
           </div>
         </div>

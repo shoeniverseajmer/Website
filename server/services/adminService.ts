@@ -45,13 +45,16 @@ export async function adminProducts() {
   return data;
 }
 
+type VariantInput = { size: string; color: string; stock: number };
+
 type ProductPayload = Partial<Product> & {
   image_urls?: string[];
+  variants?: VariantInput[];
 };
 
 export async function upsertProduct(product: ProductPayload) {
   if (!supabaseAdmin) {
-    const { image_urls, ...productPayload } = product;
+    const { image_urls, variants, ...productPayload } = product;
     const id = String(product.id ?? `p-${Date.now()}`);
     const existing = mockDb.products.find((item) => item.id === id);
     const next = {
@@ -61,22 +64,41 @@ export async function upsertProduct(product: ProductPayload) {
       created_at: existing?.created_at ?? new Date().toISOString(),
       product_images: image_urls?.length
         ? image_urls.map((image_url, index) => ({ id: `img-${id}-${index}`, product_id: id, image_url }))
-        : existing?.product_images
+        : existing?.product_images,
+      product_variants: variants
+        ? variants.map((variant, index) => ({ id: `var-${id}-${index}`, product_id: id, ...variant }))
+        : existing?.product_variants
     } as Product;
     mockDb.products = [next, ...mockDb.products.filter((item) => item.id !== id)];
     return next;
   }
 
-  const { image_urls, ...productPayload } = product;
+  const { image_urls, variants, ...productPayload } = product;
   // `description` is NOT NULL in the DB but the admin form no longer collects it.
-  // Default to empty string on create; omit on edit so existing values are preserved.
-  const isCreate = !productPayload.id;
-  const payload = {
-    ...productPayload,
-    description: productPayload.description ?? (isCreate ? '' : undefined)
-  };
-  const { data, error } = await supabaseAdmin.from('products').upsert(payload).select().single();
+  // Use INSERT on create (default description to '' to satisfy the constraint) and a
+  // scoped UPDATE on edit (only provided columns change, so the existing description is
+  // preserved). Upsert can't do this: it builds the INSERT row first and trips NOT NULL
+  // before the ON CONFLICT update can run.
+  const { id: productId, ...mutableFields } = productPayload as Record<string, unknown>;
+  let data:
+    | { id: string; [key: string]: unknown }
+    | null = null;
+  let error: { message: string } | null = null;
+  if (productId) {
+    const updatePayload: Record<string, unknown> = { ...mutableFields };
+    if (updatePayload.description == null) delete updatePayload.description;
+    ({ data, error } = await supabaseAdmin
+      .from('products')
+      .update(updatePayload)
+      .eq('id', productId)
+      .select()
+      .single());
+  } else {
+    const insertPayload: Record<string, unknown> = { ...mutableFields, description: mutableFields.description ?? '' };
+    ({ data, error } = await supabaseAdmin.from('products').insert(insertPayload).select().single());
+  }
   if (error) throw error;
+  if (!data) throw new ApiError(404, 'Product not found');
   if (image_urls) {
     await supabaseAdmin.from('product_images').delete().eq('product_id', data.id);
     if (image_urls.length) {
@@ -87,6 +109,20 @@ export async function upsertProduct(product: ProductPayload) {
         }))
       );
       if (imagesError) throw imagesError;
+    }
+  }
+  if (variants) {
+    await supabaseAdmin.from('product_variants').delete().eq('product_id', data.id);
+    if (variants.length) {
+      const { error: variantsError } = await supabaseAdmin.from('product_variants').insert(
+        variants.map((variant) => ({
+          product_id: data.id,
+          size: variant.size,
+          color: variant.color,
+          stock: variant.stock
+        }))
+      );
+      if (variantsError) throw variantsError;
     }
   }
   return data;

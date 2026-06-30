@@ -15,10 +15,10 @@ export function AdminMobileNavigation({ onLogout }: { onLogout: () => void }) {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="grid h-10 w-10 place-items-center rounded-full bg-white/95 p-1 shadow-soft ring-1 ring-white/10">
-            <img src="/logo.png" alt="Shoniverse" className="h-8 w-8 rounded-full object-contain" />
+            <img src="/logo.png" alt="Shoeniverse" className="h-8 w-8 rounded-full object-contain" />
           </div>
           <div>
-            <div className="text-lg font-black">Shoniverse</div>
+            <div className="text-lg font-black">Shoeniverse</div>
             <p className="text-xs font-bold text-white/45">Commerce OS</p>
           </div>
         </div>

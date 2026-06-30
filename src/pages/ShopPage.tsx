@@ -95,7 +95,7 @@ export function ShopPage() {
           <div className="p-7 md:p-10">
             <p className="mb-3 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.24em] text-cyan-200">
               <SlidersHorizontal className="h-4 w-4" />
-              Shoniverse catalogue
+              Shoeniverse catalogue
             </p>
             <h1 className="cosmic-glow-text text-balance text-4xl font-black leading-tight md:text-6xl">{heading}</h1>
             <p className="mt-4 max-w-xl text-sm font-bold leading-6 text-white/62 md:text-base">

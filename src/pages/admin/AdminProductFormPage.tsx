@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardDescription, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -24,6 +25,15 @@ const schema = z.object({
   accessory_type: z.enum(['belts', 'wallets', 'bags', 'none']),
   occasion: z.enum(['casual', 'festive', 'formal', 'sports']),
   image_urls: z.array(z.string()).optional(),
+  variants: z
+    .array(
+      z.object({
+        size: z.string().min(1, 'Required'),
+        color: z.string().min(1, 'Required'),
+        stock: z.coerce.number().int().nonnegative()
+      })
+    )
+    .optional(),
   is_bestseller: z.boolean().optional(),
   is_on_sale: z.boolean().optional(),
   is_active: z.boolean().optional()
@@ -34,6 +44,7 @@ type Values = z.infer<typeof schema>;
 export function AdminProductFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: products = [] } = useQuery({ queryKey: ['admin-products'], queryFn: adminService.products });
   const product = useMemo(() => products.find((item) => item.id === id), [id, products]);
   const form = useForm<Values>({
@@ -43,7 +54,13 @@ export function AdminProductFormPage() {
           ...product,
           accessory_type: product.accessory_type ?? 'none',
           sale_price: product.sale_price ?? undefined,
-          image_urls: product.product_images?.map((image) => image.image_url) ?? []
+          image_urls: product.product_images?.map((image) => image.image_url) ?? [],
+          variants:
+            product.product_variants?.map((variant) => ({
+              size: variant.size,
+              color: variant.color,
+              stock: variant.stock
+            })) ?? []
         }
       : {
           name: '',
@@ -54,12 +71,14 @@ export function AdminProductFormPage() {
           accessory_type: 'none',
           occasion: 'casual',
           image_urls: [],
+          variants: [],
           is_active: true,
           is_bestseller: false,
           is_on_sale: false
         }
   });
   const imageUrls = form.watch('image_urls') ?? [];
+  const { fields, append, remove } = useFieldArray({ control: form.control, name: 'variants' });
 
   const submit = form.handleSubmit(async (values) => {
     await adminService.upsertProduct({
@@ -76,8 +95,13 @@ export function AdminProductFormPage() {
       is_bestseller: Boolean(values.is_bestseller),
       is_on_sale: Boolean(values.is_on_sale),
       is_active: Boolean(values.is_active),
-      image_urls: imageUrls
+      image_urls: imageUrls,
+      variants: values.variants ?? []
     });
+    // Refresh admin + storefront caches so the change shows immediately (incl. editing right after adding).
+    await queryClient.invalidateQueries({ queryKey: ['admin-products'] });
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: ['product'] });
     toast.success('Product saved');
     navigate('/admin/products');
   });
@@ -87,7 +111,7 @@ export function AdminProductFormPage() {
       <AdminPageHeader
         eyebrow="Product studio"
         title={id ? 'Edit product' : 'Add product'}
-        copy="Create premium catalogue entries with merchandising flags, stock, pricing, and drag-and-drop images."
+        copy="Create premium catalogue entries with merchandising flags, stock, pricing, sizes, colours, and drag-and-drop images."
       />
       <form onSubmit={submit} className="grid gap-6 xl:grid-cols-[1fr_360px]">
         <div className="space-y-6">
@@ -113,8 +137,37 @@ export function AdminProductFormPage() {
           <Card>
             <CardHeader>
               <div>
+                <CardTitle>Sizes &amp; colours</CardTitle>
+                <CardDescription>Add each size/colour combo customers can pick. Leave empty to use default sizes.</CardDescription>
+              </div>
+            </CardHeader>
+            <div className="space-y-3">
+              {fields.length === 0 ? (
+                <p className="rounded-2xl bg-bone p-4 text-sm font-bold text-ink/55">
+                  No variants yet. Click “Add variant” to let customers choose a size and colour.
+                </p>
+              ) : null}
+              {fields.map((field, index) => (
+                <div key={field.id} className="grid items-end gap-3 rounded-2xl bg-bone p-3 sm:grid-cols-[1fr_1fr_0.8fr_auto]">
+                  <Input label="Size" placeholder="e.g. 8" error={form.formState.errors.variants?.[index]?.size?.message} {...form.register(`variants.${index}.size`)} />
+                  <Input label="Colour" placeholder="e.g. Black" error={form.formState.errors.variants?.[index]?.color?.message} {...form.register(`variants.${index}.color`)} />
+                  <Input label="Stock" type="number" {...form.register(`variants.${index}.stock`)} />
+                  <Button type="button" variant="danger" size="icon" title="Remove variant" onClick={() => remove(index)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button type="button" variant="secondary" icon={<Plus className="h-4 w-4" />} onClick={() => append({ size: '', color: '', stock: 0 })}>
+                Add variant
+              </Button>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div>
                 <CardTitle>Product images</CardTitle>
-                <CardDescription>Drag & drop or click to upload. The first image is the storefront cover.</CardDescription>
+                <CardDescription>Drag &amp; drop or click to upload. The first image is the storefront cover.</CardDescription>
               </div>
             </CardHeader>
             <ImageUploader value={imageUrls} onChange={(urls) => form.setValue('image_urls', urls, { shouldDirty: true })} />
@@ -134,7 +187,9 @@ export function AdminProductFormPage() {
               <label className="flex items-center justify-between rounded-2xl bg-bone p-4 text-sm font-bold"><span>Sale</span><input type="checkbox" {...form.register('is_on_sale')} /></label>
               <label className="flex items-center justify-between rounded-2xl bg-bone p-4 text-sm font-bold"><span>Active</span><input type="checkbox" {...form.register('is_active')} /></label>
             </div>
-            <Button className="mt-5" type="submit" fullWidth>Save product</Button>
+            <Button className="mt-5" type="submit" fullWidth disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? 'Saving…' : 'Save product'}
+            </Button>
           </Card>
         </aside>
       </form>

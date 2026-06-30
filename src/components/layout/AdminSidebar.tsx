@@ -26,11 +26,11 @@ export function AdminSidebar({
       <div className={cn('mb-8 rounded-3xl border border-white/10 bg-white/5 p-4', collapsed && 'p-3')}>
         <div className={cn('flex items-center gap-3', collapsed && 'justify-center')}>
           <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/95 p-1 shadow-soft ring-1 ring-white/10">
-            <img src="/logo.png" alt="Shoniverse" className="h-9 w-9 rounded-full object-contain" />
+            <img src="/logo.png" alt="Shoeniverse" className="h-9 w-9 rounded-full object-contain" />
           </div>
           {!collapsed ? (
             <div className="min-w-0">
-              <div className="truncate text-xl font-black">Shoniverse</div>
+              <div className="truncate text-xl font-black">Shoeniverse</div>
               <p className="text-xs font-bold text-white/45">Commerce OS</p>
             </div>
           ) : null}

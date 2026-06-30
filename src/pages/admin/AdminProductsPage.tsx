@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Eye, Pencil, Plus, Search, Star, Tag, Trash2 } from 'lucide-react';
 import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
 import { AdminTable } from '../../components/admin/AdminTable';
@@ -17,10 +17,17 @@ import type { Product } from '../../types';
 type ProductView = 'all' | 'active' | 'sale' | 'bestseller' | 'low-stock';
 
 export function AdminProductsPage() {
+  const queryClient = useQueryClient();
   const { data: fetchedProducts = [] } = useQuery({ queryKey: ['admin-products'], queryFn: adminService.products });
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   const [view, setView] = useState<ProductView>('all');
+
+  const refreshCaches = () => {
+    queryClient.invalidateQueries({ queryKey: ['admin-products'] });
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: ['product'] });
+  };
 
   useEffect(() => {
     setProducts(fetchedProducts);
@@ -48,6 +55,7 @@ export function AdminProductsPage() {
     const next = { ...product, ...patch };
     setProducts((current) => current.map((item) => (item.id === product.id ? next : item)));
     await adminService.upsertProduct(next);
+    refreshCaches();
     toast.success(message);
   };
 
@@ -56,6 +64,7 @@ export function AdminProductsPage() {
     setProducts((current) => current.filter((item) => item.id !== product.id));
     try {
       await adminService.deleteProduct(product.id);
+      refreshCaches();
       toast.success('Product deleted');
     } catch {
       setProducts(fetchedProducts);

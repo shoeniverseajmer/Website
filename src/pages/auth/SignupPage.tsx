@@ -64,7 +64,7 @@ export function SignupPage() {
     <section className="cosmic-shell grid min-h-[78vh] place-items-center py-10 text-white">
       <div className="container-shell relative z-10 grid place-items-center">
       <form onSubmit={handleSubmit} className="cosmic-card cosmic-form w-full max-w-lg rounded-[1.75rem] p-6 md:p-10">
-        <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Join Shoniverse</p>
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-cyan-200">Join Shoeniverse</p>
         <h1 className="cosmic-glow-text mt-2 text-4xl font-black">Create account</h1>
         <p className="mt-3 text-sm font-bold leading-6 text-white/60">Save products, checkout faster, and track your orders.</p>
         <div className="mt-6 grid gap-4">

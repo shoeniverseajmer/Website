@@ -42,10 +42,10 @@ export function MobileNavigation({
               <div className="relative z-10 flex items-center justify-between border-b border-white/10 p-4">
                 <div className="flex items-center gap-3">
                   <span className="grid h-11 w-11 place-items-center rounded-full bg-white/95 p-1 shadow-soft ring-1 ring-white/10">
-                    <img src="/logo.png" alt="Shoniverse" className="h-9 w-9 rounded-full object-contain" />
+                    <img src="/logo.png" alt="Shoeniverse" className="h-9 w-9 rounded-full object-contain" />
                   </span>
                   <p className="text-xs font-black uppercase tracking-[0.22em] text-cyan-200">Menu</p>
-                  <h2 className="cosmic-glow-text text-2xl font-black tracking-[0.08em]">Shoniverse</h2>
+                  <h2 className="cosmic-glow-text text-2xl font-black tracking-[0.08em]">Shoeniverse</h2>
                 </div>
                 <button className="focus-ring grid h-11 w-11 place-items-center rounded-full bg-white text-ink" onClick={onClose}>
                   <X className="h-5 w-5" />
@@ -84,7 +84,7 @@ export function MobileNavigation({
                     <MapPin className="h-4 w-4" />
                   </a>
                   <a
-                    href="https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr"
+                    href="https://www.instagram.com/theuniverseof.shoes?igsh=MW9mczIxMXZ5NjFpNQ%3D%3D"
                     target="_blank"
                     rel="noreferrer"
                     className="flex min-h-12 items-center justify-between rounded-2xl border border-white/10 bg-white/10 px-4 text-sm font-black text-white/70 transition hover:bg-white/18"

@@ -6,9 +6,9 @@ const footerGroups = [
     title: 'GET IN TOUCH',
     links: [
       { label: 'Whatsapp : +91 9606081463', to: 'https://wa.me/919606081463' },
-      { label: 'Support: surajnandan78@gmail.com', to: 'mailto:surajnandan78@gmail.com' },
+      { label: 'Support: Shoeniverseajmer@gmail.com', to: 'mailto:Shoeniverseajmer@gmail.com' },
       { label: 'Location', to: 'https://share.google/sBASapABqQlWChE2U' },
-      { label: 'Instagram', to: 'https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr' }
+      { label: 'Instagram', to: 'https://www.instagram.com/theuniverseof.shoes?igsh=MW9mczIxMXZ5NjFpNQ%3D%3D' }
     ]
   },
   {
@@ -39,9 +39,9 @@ export function UserFooter() {
           <div>
             <Link to="/" className="flex items-center gap-4">
               <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 p-2 shadow-soft ring-1 ring-white/10">
-                <img src="/logo.png" alt="Shoniverse" className="h-12 w-12 rounded-full object-contain" />
+                <img src="/logo.png" alt="Shoeniverse" className="h-12 w-12 rounded-full object-contain" />
               </span>
-              <span className="cosmic-glow-text text-4xl font-black tracking-[0.08em]">Shoniverse</span>
+              <span className="cosmic-glow-text text-4xl font-black tracking-[0.08em]">Shoeniverse</span>
             </Link>
             <p className="mt-4 max-w-sm text-sm font-bold leading-7 text-white/60">
               Homegrown sneaker energy, bold colorways, quick drops, and pairs built for the daily rotation.
@@ -50,11 +50,11 @@ export function UserFooter() {
               <a href="https://share.google/sBASapABqQlWChE2U" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 transition hover:text-white">
                 <MapPin className="h-4 w-4 text-cyan-200" /> Location
               </a>
-              <a href="mailto:surajnandan78@gmail.com" className="inline-flex items-center gap-2 transition hover:text-white">
-                <Mail className="h-4 w-4 text-cyan-200" /> surajnandan78@gmail.com
+              <a href="mailto:Shoeniverseajmer@gmail.com" className="inline-flex items-center gap-2 transition hover:text-white">
+                <Mail className="h-4 w-4 text-cyan-200" /> Shoeniverseajmer@gmail.com
               </a>
               <a
-                href="https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr"
+                href="https://www.instagram.com/theuniverseof.shoes?igsh=MW9mczIxMXZ5NjFpNQ%3D%3D"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 transition hover:text-white"
@@ -96,7 +96,7 @@ export function UserFooter() {
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs font-bold text-white/45">
           <span>© {new Date().getFullYear()} Grails Marketing Private Limited. All Rights Reserved.</span>
           <a
-            href="https://www.instagram.com/theuniverseof.shoes?igsh=MWJjMDM5ZWkzbGRkNg%3D%3D&utm_source=qr"
+            href="https://www.instagram.com/theuniverseof.shoes?igsh=MW9mczIxMXZ5NjFpNQ%3D%3D"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 transition hover:text-white"

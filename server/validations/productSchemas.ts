@@ -26,7 +26,16 @@ export const productUpsertSchema = z.object({
   is_bestseller: z.boolean().default(false),
   is_on_sale: z.boolean().default(false),
   is_active: z.boolean().default(true),
-  image_urls: z.array(z.string().url()).optional()
+  image_urls: z.array(z.string().url()).optional(),
+  variants: z
+    .array(
+      z.object({
+        size: z.string().min(1),
+        color: z.string().min(1),
+        stock: z.coerce.number().int().nonnegative()
+      })
+    )
+    .optional()
 });
 
 export const imageUploadSchema = z.object({
