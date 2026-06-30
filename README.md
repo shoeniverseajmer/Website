@@ -1,4 +1,4 @@
-# SoleLux Commerce
+# SHOENIVERSE
 
 A premium luxury shoe e-commerce platform with a cinematic customer storefront, modern admin/operator dashboard, Express API, and Supabase PostgreSQL/Auth/Storage integration.
 
