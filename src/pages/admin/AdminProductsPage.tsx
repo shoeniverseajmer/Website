@@ -18,7 +18,7 @@ type ProductView = 'all' | 'active' | 'sale' | 'bestseller' | 'low-stock';
 
 export function AdminProductsPage() {
   const queryClient = useQueryClient();
-  const { data: fetchedProducts = [] } = useQuery({ queryKey: ['admin-products'], queryFn: adminService.products });
+  const { data: fetchedProducts } = useQuery({ queryKey: ['admin-products'], queryFn: adminService.products });
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   const [view, setView] = useState<ProductView>('all');
@@ -29,8 +29,10 @@ export function AdminProductsPage() {
     queryClient.invalidateQueries({ queryKey: ['product'] });
   };
 
+  // Sync local state from the query only when data actually changes. Guarding on `data`
+  // (instead of a `= []` default) avoids a new-array-every-render infinite update loop.
   useEffect(() => {
-    setProducts(fetchedProducts);
+    if (fetchedProducts) setProducts(fetchedProducts);
   }, [fetchedProducts]);
 
   const filteredProducts = useMemo(() => {
@@ -67,7 +69,7 @@ export function AdminProductsPage() {
       refreshCaches();
       toast.success('Product deleted');
     } catch {
-      setProducts(fetchedProducts);
+      setProducts(fetchedProducts ?? []);
       toast.error('Failed to delete product');
     }
   };
