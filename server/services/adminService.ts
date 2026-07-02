@@ -52,6 +52,29 @@ type ProductPayload = Partial<Product> & {
   variants?: VariantInput[];
 };
 
+// `products.slug` is UNIQUE. The admin form derives the slug from the name, so two
+// products with the same/similar name (or editing a name to match another) would
+// violate the constraint. Append -2, -3, … until the slug is free, ignoring the
+// row currently being edited.
+async function ensureUniqueSlug(base: string, excludeId?: string) {
+  if (!supabaseAdmin) return base || 'product';
+  const clean = base || 'product';
+  let candidate = clean;
+  let suffix = 2;
+  // Bounded loop; realistically resolves in 1-2 iterations.
+  for (let attempt = 0; attempt < 1000; attempt += 1) {
+    let query = supabaseAdmin.from('products').select('id').eq('slug', candidate).limit(1);
+    if (excludeId) query = query.neq('id', excludeId);
+    const { data, error } = await query;
+    if (error) throw error;
+    if (!data || data.length === 0) return candidate;
+    candidate = `${clean}-${suffix}`;
+    suffix += 1;
+  }
+  // Extremely unlikely fallback.
+  return `${clean}-${Date.now()}`;
+}
+
 export async function upsertProduct(product: ProductPayload) {
   if (!supabaseAdmin) {
     const { image_urls, variants, ...productPayload } = product;
@@ -87,6 +110,7 @@ export async function upsertProduct(product: ProductPayload) {
   if (productId) {
     const updatePayload: Record<string, unknown> = { ...mutableFields };
     if (updatePayload.description == null) delete updatePayload.description;
+    updatePayload.slug = await ensureUniqueSlug(String(mutableFields.slug ?? ''), String(productId));
     ({ data, error } = await supabaseAdmin
       .from('products')
       .update(updatePayload)
@@ -94,7 +118,11 @@ export async function upsertProduct(product: ProductPayload) {
       .select()
       .single());
   } else {
-    const insertPayload: Record<string, unknown> = { ...mutableFields, description: mutableFields.description ?? '' };
+    const insertPayload: Record<string, unknown> = {
+      ...mutableFields,
+      description: mutableFields.description ?? '',
+      slug: await ensureUniqueSlug(String(mutableFields.slug ?? ''))
+    };
     ({ data, error } = await supabaseAdmin.from('products').insert(insertPayload).select().single());
   }
   if (error) throw error;

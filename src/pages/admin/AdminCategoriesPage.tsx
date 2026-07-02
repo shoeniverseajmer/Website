@@ -8,17 +8,20 @@ import { Input } from '../../components/ui/Input';
 import { toast } from '../../components/ui/Toast';
 import { adminService } from '../../services/adminService';
 import { slugify } from '../../utils/format';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { Category } from '../../types';
 
 export function AdminCategoriesPage() {
-  const { data: fetchedCategories = [] } = useQuery({ queryKey: ['admin-categories'], queryFn: adminService.categories });
+  const { data: fetchedCategories } = useQuery({ queryKey: ['admin-categories'], queryFn: adminService.categories });
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
   const [search, setSearch] = useState('');
 
+  // Guard on `data` (not a `= []` default) so an undefined→new-array-each-render
+  // cycle can't trigger an infinite setState loop.
   useEffect(() => {
-    setCategories(fetchedCategories);
+    if (fetchedCategories) setCategories(fetchedCategories);
   }, [fetchedCategories]);
 
   const filteredCategories = useMemo(() => {
@@ -37,17 +40,25 @@ export function AdminCategoriesPage() {
       toast.error('Category slug already exists');
       return;
     }
-    const created = await adminService.createCategory({ name: nextName, slug: nextSlug });
-    setCategories((current) => [created, ...current]);
-    setName('');
-    setSlug('');
-    toast.success('Category added');
+    try {
+      const created = await adminService.createCategory({ name: nextName, slug: nextSlug });
+      setCategories((current) => [created, ...current]);
+      setName('');
+      setSlug('');
+      toast.success('Category added');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Could not add the category. Please try again.'));
+    }
   };
 
   const removeCategory = async (id: string) => {
-    await adminService.deleteCategory(id);
-    setCategories((current) => current.filter((category) => category.id !== id));
-    toast.success('Category removed');
+    try {
+      await adminService.deleteCategory(id);
+      setCategories((current) => current.filter((category) => category.id !== id));
+      toast.success('Category removed');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Could not remove the category. Please try again.'));
+    }
   };
 
   return (

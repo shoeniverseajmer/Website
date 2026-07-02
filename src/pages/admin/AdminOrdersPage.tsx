@@ -9,6 +9,7 @@ import { Select } from '../../components/ui/Select';
 import { toast } from '../../components/ui/Toast';
 import { orderService } from '../../services/orderService';
 import { formatCurrency, toTitleCase } from '../../utils/format';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { OrderStatus } from '../../types';
 
 const statuses: OrderStatus[] = ['placed', 'confirmed', 'packed', 'shipped', 'ready_for_pickup', 'delivered', 'cancelled'];
@@ -32,9 +33,13 @@ export function AdminOrdersPage() {
   }, [orders, search, view]);
 
   const updateStatus = async (orderId: string, order_status: OrderStatus) => {
-    await orderService.updateStatus(orderId, order_status);
-    toast.success('Order status updated');
-    refetch();
+    try {
+      await orderService.updateStatus(orderId, order_status);
+      toast.success('Order status updated');
+      refetch();
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Could not update the order status. Please try again.'));
+    }
   };
 
   return (

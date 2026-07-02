@@ -9,6 +9,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from '../../components/u
 import { Input } from '../../components/ui/Input';
 import { toast } from '../../components/ui/Toast';
 import { adminService } from '../../services/adminService';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { StoreSettings } from '../../types';
 
 export function AdminSettingsPage() {
@@ -23,8 +24,12 @@ export function AdminSettingsPage() {
   }, [data, form]);
 
   const submit = form.handleSubmit(async (values) => {
-    await adminService.saveSettings(values);
-    toast.success('Settings saved');
+    try {
+      await adminService.saveSettings(values);
+      toast.success('Settings saved');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Could not save settings. Please try again.'));
+    }
   });
 
   return (

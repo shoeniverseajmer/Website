@@ -14,6 +14,7 @@ import { AdminPageHeader } from '../../components/admin/AdminPageHeader';
 import { ImageUploader } from '../../components/admin/ImageUploader';
 import { adminService } from '../../services/adminService';
 import { slugify } from '../../utils/format';
+import { getApiErrorMessage } from '../../utils/apiError';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -81,29 +82,33 @@ export function AdminProductFormPage() {
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'variants' });
 
   const submit = form.handleSubmit(async (values) => {
-    await adminService.upsertProduct({
-      id,
-      name: values.name,
-      slug: slugify(values.name),
-      price: values.price,
-      sale_price: values.sale_price || null,
-      stock: values.stock,
-      gender_category: values.gender_category,
-      product_type: values.product_type,
-      accessory_type: values.accessory_type === 'none' ? null : values.accessory_type,
-      occasion: values.occasion,
-      is_bestseller: Boolean(values.is_bestseller),
-      is_on_sale: Boolean(values.is_on_sale),
-      is_active: Boolean(values.is_active),
-      image_urls: imageUrls,
-      variants: values.variants ?? []
-    });
-    // Refresh admin + storefront caches so the change shows immediately (incl. editing right after adding).
-    await queryClient.invalidateQueries({ queryKey: ['admin-products'] });
-    queryClient.invalidateQueries({ queryKey: ['products'] });
-    queryClient.invalidateQueries({ queryKey: ['product'] });
-    toast.success('Product saved');
-    navigate('/admin/products');
+    try {
+      await adminService.upsertProduct({
+        id,
+        name: values.name,
+        slug: slugify(values.name),
+        price: values.price,
+        sale_price: values.sale_price || null,
+        stock: values.stock,
+        gender_category: values.gender_category,
+        product_type: values.product_type,
+        accessory_type: values.accessory_type === 'none' ? null : values.accessory_type,
+        occasion: values.occasion,
+        is_bestseller: Boolean(values.is_bestseller),
+        is_on_sale: Boolean(values.is_on_sale),
+        is_active: Boolean(values.is_active),
+        image_urls: imageUrls,
+        variants: values.variants ?? []
+      });
+      // Refresh admin + storefront caches so the change shows immediately (incl. editing right after adding).
+      await queryClient.invalidateQueries({ queryKey: ['admin-products'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['product'] });
+      toast.success('Product saved');
+      navigate('/admin/products');
+    } catch (error) {
+      toast.error(getApiErrorMessage(error, 'Could not save the product. Please try again.'));
+    }
   });
 
   return (

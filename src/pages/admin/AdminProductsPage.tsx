@@ -12,6 +12,7 @@ import { Select } from '../../components/ui/Select';
 import { toast } from '../../components/ui/Toast';
 import { adminService } from '../../services/adminService';
 import { formatCurrency } from '../../utils/format';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { Product } from '../../types';
 
 type ProductView = 'all' | 'active' | 'sale' | 'bestseller' | 'low-stock';
@@ -56,9 +57,15 @@ export function AdminProductsPage() {
   const updateProduct = async (product: Product, patch: Partial<Product>, message: string) => {
     const next = { ...product, ...patch };
     setProducts((current) => current.map((item) => (item.id === product.id ? next : item)));
-    await adminService.upsertProduct(next);
-    refreshCaches();
-    toast.success(message);
+    try {
+      await adminService.upsertProduct(next);
+      refreshCaches();
+      toast.success(message);
+    } catch (error) {
+      // Roll back the optimistic change so the UI reflects the real saved state.
+      setProducts((current) => current.map((item) => (item.id === product.id ? product : item)));
+      toast.error(getApiErrorMessage(error, 'Could not update the product. Please try again.'));
+    }
   };
 
   const deleteProduct = async (product: Product) => {
@@ -68,9 +75,9 @@ export function AdminProductsPage() {
       await adminService.deleteProduct(product.id);
       refreshCaches();
       toast.success('Product deleted');
-    } catch {
+    } catch (error) {
       setProducts(fetchedProducts ?? []);
-      toast.error('Failed to delete product');
+      toast.error(getApiErrorMessage(error, 'Could not delete the product. Please try again.'));
     }
   };
 

@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: Product }) {
   const add = useCartStore((state) => state.add);
   const image = product.product_images?.[0]?.image_url;
   const price = product.sale_price ?? product.price;
-  const sizes = product.product_variants?.map((variant) => variant.size).slice(0, 10) ?? [];
+  const sizes = Array.from(new Set(product.product_variants?.map((variant) => variant.size) ?? [])).slice(0, 10);
 
   return (
     <motion.article
