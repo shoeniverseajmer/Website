@@ -6,8 +6,9 @@ const footerGroups = [
     title: 'GET IN TOUCH',
     links: [
       { label: 'Whatsapp : +91 9606081463', to: 'https://wa.me/919606081463' },
+      { label: 'Shop : +91 87695 35370', to: 'tel:+918769535370' },
       { label: 'Support: Shoeniverseajmer@gmail.com', to: 'mailto:Shoeniverseajmer@gmail.com' },
-      { label: 'Location', to: 'https://share.google/sBASapABqQlWChE2U' },
+      { label: 'Location', to: 'https://share.google/OOVcmFGjCleX7fN9A' },
       { label: 'Instagram', to: 'https://www.instagram.com/theuniverseof.shoes?igsh=MW9mczIxMXZ5NjFpNQ%3D%3D' }
     ]
   },
@@ -24,7 +25,7 @@ const footerGroups = [
     title: 'QUICK LINKS',
     links: [
       { label: 'Home', to: '/' },
-      { label: 'Store Locator', to: 'https://share.google/sBASapABqQlWChE2U' },
+      { label: 'Store Locator', to: 'https://share.google/OOVcmFGjCleX7fN9A' },
       { label: 'Return and Exchange', to: '/orders' },
       { label: 'FAQ', to: '/shop' }
     ]
@@ -47,8 +48,11 @@ export function UserFooter() {
               Homegrown sneaker energy, bold colorways, quick drops, and pairs built for the daily rotation.
             </p>
             <div className="mt-6 grid gap-3 text-sm font-bold text-white/62">
-              <a href="https://share.google/sBASapABqQlWChE2U" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 transition hover:text-white">
+              <a href="https://share.google/OOVcmFGjCleX7fN9A" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 transition hover:text-white">
                 <MapPin className="h-4 w-4 text-cyan-200" /> Location
+              </a>
+              <a href="tel:+918769535370" className="inline-flex items-center gap-2 transition hover:text-white">
+                <MessageCircle className="h-4 w-4 text-cyan-200" /> +91 87695 35370
               </a>
               <a href="mailto:Shoeniverseajmer@gmail.com" className="inline-flex items-center gap-2 transition hover:text-white">
                 <Mail className="h-4 w-4 text-cyan-200" /> Shoeniverseajmer@gmail.com
