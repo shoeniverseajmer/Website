@@ -1,6 +1,6 @@
 export type UserRole = 'customer' | 'admin' | 'operator';
 export type GenderCategory = 'men' | 'women' | 'kids' | 'unisex';
-export type ProductType = 'shoes' | 'accessories';
+export type ProductType = 'footwear' | 'accessories';
 export type AccessoryType = 'belts' | 'wallets' | 'bags' | null;
 export type Occasion = 'casual' | 'festive' | 'formal' | 'sports';
 export type OrderType = 'delivery' | 'pickup';
