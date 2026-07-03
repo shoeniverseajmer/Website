@@ -67,7 +67,7 @@ export function HomePage() {
               <Rocket className="h-4 w-4" />
               Galactic sneaker drop
             </p>
-            <h1 className="cosmic-glow-text mt-6 max-w-4xl text-balance text-6xl font-black uppercase leading-[0.88] md:text-8xl">
+            <h1 className="cosmic-glow-text mt-6 max-w-4xl text-balance text-6xl font-black  leading-[0.88] md:text-8xl">
               The Universe Of Shoes
             </h1>
             <p className="mt-6 max-w-xl text-base font-bold leading-8 text-white/66 md:text-lg">
